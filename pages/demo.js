@@ -20,8 +20,6 @@ function useMouseCursors(room) {
   return positions;
 }
 
-const photos = ["/evan.jpg", "/kevin.jpg", "/koby.jpg"];
-
 export default function MainPage() {
   const positions = useMouseCursors("cool-room");
   const [waitlist, setIsInWaitlist] = usePresence("cool-room", "is_waiting");
