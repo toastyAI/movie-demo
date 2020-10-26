@@ -1,5 +1,90 @@
-import { RoomServiceProvider } from "@roomservice/react";
+import { usePresence } from "@roomservice/react";
+import { Cursor } from "../components/Cursor";
 
 export default function MainPage() {
-  return "index";
+  const [positions, setMyPosition] = usePresence("cool-room", "positions");
+  const [waitlist, setIsInWaitlist] = usePresence("cool-room", "is_waiting");
+
+  const cursors = Object.entries(positions).map(([key, value]) => (
+    <div
+      style={{
+        top: value.y,
+        left: value.x,
+        position: "absolute",
+        transition: "all 0.25s",
+      }}
+    >
+      <Cursor />
+      <img
+        src="kevin.jpg"
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 1000,
+        }}
+      />
+    </div>
+  ));
+
+  const areOthersHovering =
+    Object.values(waitlist).length > 0 &&
+    Object.values(waitlist).every((val) => !!val);
+
+  let message = "Drag your mouse here to signal you're ready!";
+  if (areOthersHovering) {
+    message = "Everyone else is waiting on you!";
+  }
+
+  return (
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        fontSize: 18,
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+        }}
+        onMouseMove={(e) => {
+          setIsInWaitlist(false);
+          setMyPosition({
+            x: e.clientX,
+            y: e.clientY,
+          });
+        }}
+      >
+        {cursors}
+
+        <pre>{JSON.stringify(positions)}</pre>
+        <pre>{JSON.stringify(waitlist)}</pre>
+      </div>
+
+      <div
+        style={{
+          justifySelf: "flex-end",
+          width: "100%",
+          height: 256,
+          background: "#F3EAC4",
+          borderTop: "4px solid #27302D",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onMouseMove={(e) => {
+          setIsInWaitlist(true);
+          setMyPosition({
+            x: e.clientX,
+            y: e.clientY,
+          });
+        }}
+      >
+        {message}
+      </div>
+    </div>
+  );
 }
