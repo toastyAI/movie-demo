@@ -1,9 +1,12 @@
 import { usePresence } from "@roomservice/react";
 import { Cursor } from "../components/Cursor";
+import { useStartTyping } from "react-use";
+import { useState, useEffect } from "react";
 
 export default function MainPage() {
   const [positions, setMyPosition] = usePresence("cool-room", "positions");
   const [waitlist, setIsInWaitlist] = usePresence("cool-room", "is_waiting");
+  const [amIHovering, setAmIHovering] = useState(false);
 
   const cursors = Object.entries(positions).map(([key, value]) => (
     <div
@@ -51,6 +54,7 @@ export default function MainPage() {
         }}
         onMouseMove={(e) => {
           setIsInWaitlist(false);
+          setAmIHovering(false);
           setMyPosition({
             x: e.clientX,
             y: e.clientY,
@@ -58,9 +62,6 @@ export default function MainPage() {
         }}
       >
         {cursors}
-
-        <pre>{JSON.stringify(positions)}</pre>
-        <pre>{JSON.stringify(waitlist)}</pre>
       </div>
 
       <div
@@ -77,6 +78,7 @@ export default function MainPage() {
         }}
         onMouseMove={(e) => {
           setIsInWaitlist(true);
+          setAmIHovering(true);
           setMyPosition({
             x: e.clientX,
             y: e.clientY,
