@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function MainPage() {
   const [positions, setMyPosition] = usePresence("cool-room", "positions");
-  const [waitlist, setWaitlist] = useMap("cool-room", "waitlist");
+  const [waitlist, setIsInWaitlist] = usePresence("cool-room", "is_waiting");
   const [amIHovering, setAmIHovering] = useState(false);
   const bounding = useRef();
 
